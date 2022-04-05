@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Spring Security Demo</title>
+<link rel="stylesheet" 
+ href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<style>
+    .navbar {
+        background-color: green;
+    }
+</style>
+
+<body>
+
+   
+    <!-- Create HTML registration form -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+                <!-- success message -->
+                <div th:if="${param.success}">
+                  <div class="alert alert-info">You've successfully registered
+                        to our awesome app!</div>
+                </div>
+
+                <h1>Registration</h1>
+
+                <form th:action="@{/registration}" method="post" 
+                             th:object="${admin}">
+                    <div class="form-group">
+                        <label class="control-label" for="FullName"> 
+                           Full Name </label>
+                        <input id="FullName" class="form-control" 
+                                 th:field="*{FullName}" required
+                            autofocus="autofocus" />
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label" for="email"> Email 
+                         </label> <input id="email" class="form-control"
+                            th:field="*{email}" required autofocus="autofocus" 
+                                />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="password"> 
+                           Password </label> <input id="password"
+                            class="form-control" type="password" 
+                          th:field="*{password}" required
+                            autofocus="autofocus" />
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                          Register</button>
+                        <span>Already registered? <a 
+                  th:href="@{/login}">Login
+                                here</a></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

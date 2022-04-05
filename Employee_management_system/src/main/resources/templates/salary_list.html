@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>admin</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link th:href="@{/css/style.css}" rel="stylesheet" />
+    </head>
+    <body>
+        
+            
+				<br>
+				<br>
+                
+<div class ="container">
+		<div class = "row">
+			<h1> Salary List</h1>
+		</div>
+		
+		<br>
+		<table class = "table table-striped table-bordered">
+			<thead class = "table-light">
+				<tr>
+					<th> First Name</th>
+					<th> Last Name</th>
+					<th> Phone </th>
+					<th> Basic </th>
+					<th> House Rent Allowance </th>
+					<th> Conveyance Allowance</th>
+					<th> Medical reimbursement</th>
+					<th> Special Allowance</th>
+					<th> Performance Incentive </th>
+					<th> Annual Salary </th>
+					
+					
+					
+				</tr>
+			</thead>
+			
+	<tbody>
+				<tr th:each = "employee: ${employees}">
+					<td th:text = "${employee.firstName}"></td>
+					<td th:text = "${employee.lastName}"></td>
+					<td th:text = "${employee.Phone}"></td>
+					<td th:text = "${employee.salary.Basic}"></td>
+					<td th:text = "${employee.salary.House_Rent_Allowance}"></td>
+					<td th:text = "${employee.salary.Conveyance_Allowance}"></td>
+					<td th:text = "${employee.salary.Medical_Reimbursement}"></td>
+					<td th:text = "${employee.salary.Special_Allowance}"></td>
+					<td th:text = "${employee.salary.Performance_Incentive}"></td>
+					<td th:text = "${employee.salary.Annual_Salary}"></td>
+						 
+				</tr>
+			</tbody> 
+		
+		</table>
+		
+	</div>
+          
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="@{/js/scripts.js}"></script>
+    </body>
+</html>
