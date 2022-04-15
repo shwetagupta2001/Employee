@@ -1,10 +1,18 @@
 package com.prog.controller;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +20,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
+import com.prog.entity.Admin;
+import com.prog.entity.AdminRegistrationDto;
 import com.prog.entity.Employee;
 import com.prog.entity.Salary;
+import com.prog.entity.SalaryLog;
+import com.prog.repository.SalaryLogRepository;
 import com.prog.service.AdminService;
 import com.prog.service.EmployeeService;
+import com.prog.service.SalaryLogService;
 
 
 
@@ -30,6 +42,11 @@ public class AdminController {
 	@Autowired
 	private EmployeeService employeeService;
 	
+	@Autowired
+	private SalaryLogService salaryLogService;
+	
+	@Autowired
+	private SalaryLogRepository salaryLogRepository;
 	//@GetMapping("/")
 		//public String home() {
 	   // return "index";
@@ -55,6 +72,16 @@ public class AdminController {
 		return "salary_list";
 	}
 	
+	
+	
+	@GetMapping("/employees/salaryLog/{id}")
+	public String Updatedsalary(@PathVariable Long id,Model model) {
+		Employee employee = employeeService.getEmployeeById(id);
+		Set<SalaryLog> salaryLog = employee.getSalaryLog();
+		model.addAttribute("salaryLog", salaryLog);
+	    return "SalaryLog";
+	}
+	
 	@GetMapping("/employees/new")
 	public String createEmployeeForm(Model model) {
 		
@@ -68,27 +95,37 @@ public class AdminController {
 	}
 	
 	@PostMapping("/employees/save")
-	public String saveStudent(@Valid @ModelAttribute("employee") Employee employee,@Valid @ModelAttribute("salary") Salary salary,BindingResult bindingResult) {
+	public String saveStudent(@Valid @ModelAttribute("employee") Employee employee,
+			@Valid @ModelAttribute("salary") Salary salary,
+			//@AuthenticationPrincipal AdminRegistrationDto registrationDto,
+			BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
             return "create_employee";
         } 
         
             
-		employeeService.saveEmployee(employee,salary);
+		
+		//String FullName = registrationDto.getFullName();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String name = auth.getName();
+		SalaryLog salaryLog = new SalaryLog();
+		salaryLog.setFullName(name);
+		salaryLog.setAnnual_Salary(salary.getAnnual_Salary());
+		employeeService.saveEmployee(employee,salary,salaryLog);
 		return "redirect:/employees";
 		
 	}
 	
-	@GetMapping("/employees/edit/{id}")
+	@GetMapping("/employees/{id}")
 	public String editStudentForm(@PathVariable Long id, Model model) {
 		model.addAttribute("employee", employeeService.getEmployeeById(id));
 		return "edit_employee";
 	}
 
 	@PostMapping("/employees/{id}")
-	public String updateStudent(@PathVariable Long id,
+	public String updateEmployee(@PathVariable Long id,
 			@ModelAttribute("employee") Employee employee,
-			//@ModelAttribute("salary") Salary salary,
+			@ModelAttribute("salaryLog") SalaryLog salaryLog,
 			Model model) {
 		
 		
@@ -103,7 +140,14 @@ public class AdminController {
 		Salary updateSalary = updateSalary(existingEmployee.getSalary(),employee.getSalary());
 		existingEmployee.setSalary(updateSalary);
 		//existingEmployee.salary.setSal_id(employee.salary.getSal_id());
-		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String name = auth.getName();
+		SalaryLog salaryList = new SalaryLog();
+		salaryList.setFullName(name);
+		salaryList.setAnnual_Salary(existingEmployee.getSalary().getAnnual_Salary());
+		Set<SalaryLog> salaryLogSet = employee.getSalaryLog();
+		salaryLogSet.add(salaryList);
+		existingEmployee.setSalaryLog(salaryLogSet);
 		
 		//Employee existingSalary = employeeService.getSalaryById(employee.getSalary());
 		employeeService.updateEmployee(existingEmployee);

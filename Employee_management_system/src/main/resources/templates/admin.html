@@ -19,7 +19,7 @@
                 <div class="list-group list-group-flush">
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/employees/new}">Add Employee</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/employees/salary}">Salary Details</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Salary Log</a>
+                   <!--  <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/employees/salaryLog}">Salary Log</a>--> 
                     
                 </div>
             </div>
@@ -73,7 +73,7 @@
 					<td th:text = "${employee.Phone}"></td>
 					<td th:text = "${employee.salary.Annual_Salary}"></td>
 					<td>
-						<a th:href = "@{/employees/edit/{id}(id=${employee.emp_id})}"
+						<a th:href = "@{/employees/{id}(id=${employee.emp_id})}"
 						 class = "btn btn-primary">Update</a>
 					</td>
 				</tr>
@@ -87,6 +87,6 @@
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
-        <script src="@{/js/scripts.js}"></script>
+        <script th:src="@{/js/scripts.js}"></script>
     </body>
 </html>
